@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Container, Grid, TextField, Button } from "@mui/material";
 import Swal from "sweetalert2";
+import { saveFavorite, saveCategory } from "../App";
 
 const InputForm = ({ setFavorites, setCategories, categories }) => {
   const [inputValue, setInputValue] = useState("");
@@ -14,38 +15,59 @@ const InputForm = ({ setFavorites, setCategories, categories }) => {
     return pattern.test(url);
   };
 
-  // Añadir la URL favorita
-  const addFavorite = () => {
-    if (isValidInstagramURL(inputValue)) {
-      const username = inputValue.split("instagram.com/")[1].replace("/", "");
+// Añadir la URL favorita
+const addFavorite = async () => {
+  if (isValidInstagramURL(inputValue)) {
+    const username = inputValue.split("instagram.com/")[1].replace("/", "");
 
-      const newFavorite = {
-        username,
-        url: inputValue,
-        category,
-      };
+    const newFavorite = {
+      username,
+      url: inputValue,
+      category,
+    };
 
-      setFavorites((prevFavorites) => [...prevFavorites, newFavorite]);
+    // Guardar en el estado local
+    setFavorites((prevFavorites) => [...prevFavorites, newFavorite]);
 
-      if (!categories.includes(category)) {
-        setCategories((prevCategories) => [...prevCategories, category]);
-      }
-
-      setInputValue("");
-      setCategory("");
+    // Guardar en IndexedDB
+    try {
+      await saveFavorite(newFavorite);
       Swal.fire({
         title: "Agregado con éxito!",
         text: "Tu favorito ha sido agregado.",
         icon: "success",
       });
-    } else {
+    } catch (error) {
       Swal.fire({
         title: "Error!",
-        text: "Por favor, ingresa una URL válida de Instagram.",
+        text: "No se pudo guardar tu favorito en la base de datos.",
         icon: "error",
       });
     }
-  };
+
+    // Añadir categoría solo si no existe
+    if (!categories.includes(category)) {
+      setCategories((prevCategories) => [...prevCategories, category]);
+      
+      // Aquí guardamos la nueva categoría en IndexedDB
+      try {
+        await saveCategory(category);
+      } catch (error) {
+        console.error("Error al guardar la categoría", error);
+      }
+    }
+
+    setInputValue("");
+    setCategory("");
+  } else {
+    Swal.fire({
+      title: "Error!",
+      text: "Por favor, ingresa una URL válida de Instagram.",
+      icon: "error",
+    });
+  }
+};
+
 
   return (
     <Container style={{ textAlign: "center", paddingTop: "30px" }}>

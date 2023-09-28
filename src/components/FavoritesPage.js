@@ -1,11 +1,8 @@
 import React, { useState } from 'react'; 
-import CategoryDropdown from './CategoryDropdown';
-import FavoritesList from './FavoritesList';
+import FavoritesComponent from './FavoritesComponent';
 import { Box } from '@mui/material';
 
 const FavoritesPage = ({ favorites, categories }) => {
-  const [selectedCategory, setSelectedCategory] = useState('');
-
   return (
     <Box sx={{ 
       maxWidth: {
@@ -16,9 +13,7 @@ const FavoritesPage = ({ favorites, categories }) => {
       },
       margin: 'auto',
     }}>
-      <h2 style={{ marginLeft: '2px' }}>Favoritos</h2>
-      <CategoryDropdown categories={categories} setSelectedCategory={setSelectedCategory} />
-      <FavoritesList favorites={favorites} selectedCategory={selectedCategory} />
+      <FavoritesComponent favorites={favorites} categories={categories} />
     </Box>
   );
 };
