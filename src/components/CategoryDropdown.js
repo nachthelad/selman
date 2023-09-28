@@ -17,7 +17,7 @@ const CategoryDropdown = ({ categories, setSelectedCategory }) => {
       <InputLabel sx={{ color: "white" }}>Todos</InputLabel>
       <Select
         label="Todos"
-        onChange={(e) => setSelectedCategory(e.target.value || [])}>
+        onChange={(e) => setSelectedCategory(e.target.value || '')}>
         <MenuItem value="" style={{ color: "black" }}>
           <em>Todos</em>
         </MenuItem>
