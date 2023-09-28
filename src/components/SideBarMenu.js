@@ -7,22 +7,27 @@ import ListItemText from "@mui/material/ListItemText";
 import HomeIcon from "@mui/icons-material/Home";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Typography from "@mui/material/Typography";
+import { useMediaQuery, useTheme } from "@mui/material";
+
 
 export default function DesktopSidebar({ setCurrentPage }) {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
-
+  
   const handleListItemClick = (event, index, page) => {
     setSelectedIndex(index);
     setCurrentPage(page);
   };
-
+  
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
+  
   return (
     <Box
       sx={{
         width: "100%",
         maxWidth: 250,
-        bgcolor: 'transparent',
-        display: { xs: 'none', md: 'block' }
+        bgcolor: "transparent",
+        display: { xs: "none", md: "block" },
       }}>
       <Typography variant="h6" align="center" style={{ margin: "10px 0" }}>
         Gestion.AR
@@ -32,7 +37,7 @@ export default function DesktopSidebar({ setCurrentPage }) {
           selected={selectedIndex === 0}
           onClick={(event) => handleListItemClick(event, 0, "Home")}>
           <ListItemIcon>
-            <HomeIcon />
+            <HomeIcon color={isSmallScreen ? "default" : "primary"} />
           </ListItemIcon>
           <ListItemText primary="Home" />
         </ListItemButton>
@@ -40,7 +45,7 @@ export default function DesktopSidebar({ setCurrentPage }) {
           selected={selectedIndex === 1}
           onClick={(event) => handleListItemClick(event, 1, "Favoritos")}>
           <ListItemIcon>
-            <FavoriteIcon />
+            <FavoriteIcon color={isSmallScreen ? "default" : "primary"} />
           </ListItemIcon>
           <ListItemText primary="Favoritos" />
         </ListItemButton>

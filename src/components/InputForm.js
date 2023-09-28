@@ -1,52 +1,54 @@
-import React, { useState } from 'react';
-import { Container, Grid, TextField, Button } from '@mui/material';
-import Swal from 'sweetalert2';
+import React, { useState } from "react";
+import { Container, Grid, TextField, Button } from "@mui/material";
+import Swal from "sweetalert2";
 
 const InputForm = ({ setFavorites, setCategories, categories }) => {
-  const [inputValue, setInputValue] = useState('');
-  const [category, setCategory] = useState('');
+  const [inputValue, setInputValue] = useState("");
+  const [category, setCategory] = useState("");
 
   // Validar que la URL sea una URL de Instagram
   const isValidInstagramURL = (url) => {
-    const pattern = new RegExp('^(https://www.)?instagram.com/([a-zA-Z0-9_](?:(?:[a-zA-Z0-9_]|(?:\\.(?=.))){0,28}(?:[a-zA-Z0-9_]))?)/?$');
+    const pattern = new RegExp(
+      "^(https://www.)?instagram.com/([a-zA-Z0-9_](?:(?:[a-zA-Z0-9_]|(?:\\.(?=.))){0,28}(?:[a-zA-Z0-9_]))?)/?$"
+    );
     return pattern.test(url);
   };
 
   // Añadir la URL favorita
   const addFavorite = () => {
     if (isValidInstagramURL(inputValue)) {
-      const username = inputValue.split('instagram.com/')[1].replace('/', '');
+      const username = inputValue.split("instagram.com/")[1].replace("/", "");
 
       const newFavorite = {
         username,
         url: inputValue,
-        category
+        category,
       };
 
-      setFavorites(prevFavorites => [...prevFavorites, newFavorite]);
+      setFavorites((prevFavorites) => [...prevFavorites, newFavorite]);
 
       if (!categories.includes(category)) {
-        setCategories(prevCategories => [...prevCategories, category]);
+        setCategories((prevCategories) => [...prevCategories, category]);
       }
 
-      setInputValue('');
-      setCategory('');
+      setInputValue("");
+      setCategory("");
       Swal.fire({
-        title: 'Agregado con éxito!',
-        text: 'Tu favorito ha sido agregado.',
-        icon: 'success'
+        title: "Agregado con éxito!",
+        text: "Tu favorito ha sido agregado.",
+        icon: "success",
       });
     } else {
-        Swal.fire({
-            title: 'Error!',
-            text: 'Por favor, ingresa una URL válida de Instagram.',
-            icon: 'error'
-          });
+      Swal.fire({
+        title: "Error!",
+        text: "Por favor, ingresa una URL válida de Instagram.",
+        icon: "error",
+      });
     }
   };
 
   return (
-    <Container style={{ textAlign: 'center', paddingTop: '30px' }}>
+    <Container style={{ textAlign: "center", paddingTop: "30px" }}>
       <Grid container spacing={3} justifyContent="center">
         <Grid item xs={12} md={6}>
           <TextField
@@ -54,8 +56,19 @@ const InputForm = ({ setFavorites, setCategories, categories }) => {
             variant="outlined"
             label="URL de Instagram"
             value={inputValue}
-            onChange={e => setInputValue(e.target.value)}
-            style={{ marginBottom: '20px', color: 'white' }}
+            onChange={(e) => setInputValue(e.target.value)}
+            sx={{
+              marginBottom: "20px",
+              color: "white",
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "white",
+                },
+              },
+              "& .MuiInputLabel-root": {
+                color: "white",
+              },
+            }}
           />
         </Grid>
         <Grid item xs={12} md={6}>
@@ -64,8 +77,19 @@ const InputForm = ({ setFavorites, setCategories, categories }) => {
             variant="outlined"
             label="Categoría"
             value={category}
-            onChange={e => setCategory(e.target.value)}
-            style={{ marginBottom: '20px', color: 'white'  }}
+            onChange={(e) => setCategory(e.target.value)}
+            sx={{
+              marginBottom: "20px",
+              color: "white",
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "white",
+                },
+              },
+              "& .MuiInputLabel-root": {
+                color: "white",
+              },
+            }}
           />
         </Grid>
         <Grid item xs={12}>

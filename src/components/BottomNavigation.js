@@ -4,18 +4,18 @@ import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import HomeIcon from "@mui/icons-material/Home";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import useMediaQuery from '@mui/material/useMediaQuery';
+import { useMediaQuery } from "@mui/material";
 
 export default function MyBottomNavigation({ setCurrentPage }) {
-  const matches = useMediaQuery('(max-width:900px)');
+  const matches = useMediaQuery("(max-width:900px)");
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
     if (newValue === 0) {
-      setCurrentPage('Home');
+      setCurrentPage("Home");
     } else if (newValue === 1) {
-      setCurrentPage('Favoritos');
+      setCurrentPage("Favoritos");
     }
   };
 
@@ -24,19 +24,33 @@ export default function MyBottomNavigation({ setCurrentPage }) {
   }
 
   return (
-    <Box sx={{ 
-      width: '100%', 
-      position: 'fixed', 
-      bottom: 0, 
-      zIndex: 1000
-    }}>
-      <BottomNavigation
-        showLabels
-        value={value}
-        onChange={handleChange}
-      >
-        <BottomNavigationAction label="Home" icon={<HomeIcon />} />
-        <BottomNavigationAction label="Favoritos" icon={<FavoriteIcon />} />
+    <Box
+      sx={{
+        width: "100%",
+        position: "fixed",
+        bottom: 0,
+        zIndex: 1000,
+      }}
+    >
+      <BottomNavigation showLabels value={value} onChange={handleChange}>
+        <BottomNavigationAction
+          label="Home"
+          sx={{
+            "&.Mui-selected": {
+              color: "black",
+            },
+          }}
+          icon={<HomeIcon />}
+        />
+        <BottomNavigationAction
+          label="Favoritos"
+          sx={{
+            "&.Mui-selected": {
+              color: "black",
+            },
+          }}
+          icon={<FavoriteIcon />}
+        />
       </BottomNavigation>
     </Box>
   );
