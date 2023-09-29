@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Swal from "sweetalert2";
-import { deleteFavorite } from "./dbOperations";
+import { deleteFavorite, deleteCategory } from "./dbOperations";
 
 const FavoritesComponent = ({
   favorites = [],
@@ -41,26 +41,27 @@ const FavoritesComponent = ({
     if (result.isConfirmed) {
       try {
         await deleteFavorite(favorite.username);
-
-      // Calculamos el nuevo estado de los favoritos.
-      const updatedFavorites = favorites.filter((fav) => fav.username !== favorite.username);
-      
-      // Calculamos si debemos eliminar la categoría.
-      const remainingFavoritesInCategory = updatedFavorites.filter((fav) => fav.category === favorite.category);
-      let newCategories = categories;
-      if (remainingFavoritesInCategory.length === 0) {
-        newCategories = categories.filter((cat) => cat !== favorite.category);
+    
+        // Calculamos el nuevo estado de los favoritos.
+        const updatedFavorites = favorites.filter((fav) => fav.username !== favorite.username);
+        
+        // Calculamos si debemos eliminar la categoría.
+        const remainingFavoritesInCategory = updatedFavorites.filter((fav) => fav.category === favorite.category);
+        let newCategories = categories;
+        if (remainingFavoritesInCategory.length === 0) {
+          await deleteCategory(favorite.category); // Aquí eliminamos la categoría de la base de datos
+          newCategories = categories.filter((cat) => cat.categoryName !== favorite.category);
+        }
+    
+        // Actualizamos los estados.
+        setFavorites(updatedFavorites); // Asegúrate de que esto realmente actualiza el estado
+        setCategories(newCategories);  // Asegúrate de que esto realmente actualiza el estado
+    
+        Swal.fire("Eliminado!", "El favorito ha sido eliminado.", "success");
+      } catch (error) {
+        console.log("Error detallado:", error);
+        Swal.fire("Error!", "Hubo un error al eliminar el favorito.", "error");
       }
-
-      // Actualizamos los estados.
-      setFavorites([...updatedFavorites]);
-      setCategories([...newCategories]);
-
-      Swal.fire("Eliminado!", "El favorito ha sido eliminado.", "success");
-    } catch (error) {
-      console.log("Error detallado:", error);
-      Swal.fire("Error!", "Hubo un error al eliminar el favorito.", "error");
-    }
     }
   };
 
@@ -91,13 +92,14 @@ const FavoritesComponent = ({
         <InputLabel sx={{ color: "white" }}>Seleccionar</InputLabel>
         <Select
           label={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}>
+          onChange={(e) => setSelectedCategory(e.target.value)}
+          style={{ width: '140px' }}>
           <MenuItem value="Todos" sx={{ color: "black" }}>
             <em>Todos</em>
           </MenuItem>
           {categories?.map((category, index) => (
-            <MenuItem key={index} value={category} style={{ color: "black" }}>
-              {category}
+            <MenuItem key={index} value={category.categoryName} style={{ color: "black" }}>
+              {category.categoryName}
             </MenuItem>
           ))}
         </Select>

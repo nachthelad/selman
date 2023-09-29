@@ -1,6 +1,6 @@
 export const openDatabase = () => {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open("myDatabase", 1);
+    const request = indexedDB.open("myDatabase", 2);
 
     request.onerror = function (event) {
       reject("No se pudo abrir la base de datos");
@@ -9,7 +9,7 @@ export const openDatabase = () => {
     request.onupgradeneeded = function (event) {
       const db = event.target.result;
       db.createObjectStore("favorites", { keyPath: "username" });
-      db.createObjectStore("categories", { autoIncrement: true });
+      db.createObjectStore("categories", { keyPath: "categoryName" });
     };
 
     request.onsuccess = function (event) {
@@ -111,7 +111,7 @@ export const getAllCategories = async () => {
 
 export const deleteFavorite = async (favoriteId) => {
   return new Promise((resolve, reject) => {
-    const openRequest = indexedDB.open("myDatabase", 1);
+    const openRequest = indexedDB.open("myDatabase", 2);
 
     openRequest.onerror = function (event) {
       reject("Error al abrir la base de datos");
@@ -127,13 +127,38 @@ export const deleteFavorite = async (favoriteId) => {
       const deleteRequest = store.delete(favoriteId);
 
       deleteRequest.onsuccess = function (event) {
-        console.log(deleteRequest);
+        console.log(event);
         resolve("Elemento eliminado con éxito");
       };
 
       deleteRequest.onerror = function (event) {
-        console.log(deleteRequest);
+        console.log(event);
         reject("Error al eliminar el elemento");
+      };
+    };
+  });
+};
+
+export const deleteCategory = async (categoryName) => {
+  return new Promise((resolve, reject) => {
+    const openRequest = indexedDB.open("myDatabase", 2);
+
+    openRequest.onerror = function (event) {
+      reject("Error al abrir la base de datos");
+    };
+
+    openRequest.onsuccess = function (event) {
+      const db = event.target.result;
+      const transaction = db.transaction(["categories"], "readwrite"); // Asumiendo que tienes un 'objectStore' llamado 'categories'
+      const store = transaction.objectStore("categories");
+      const deleteRequest = store.delete(categoryName);
+
+      deleteRequest.onsuccess = function (event) {
+        resolve("Categoría eliminada con éxito");
+      };
+
+      deleteRequest.onerror = function (event) {
+        reject("Error al eliminar la categoría");
       };
     };
   });

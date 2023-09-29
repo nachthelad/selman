@@ -53,6 +53,10 @@ const InputForm = ({ setFavorites, favorites, setCategories, categories }) => {
       category,
     };
 
+    const newCategory = {
+      categoryName: category,
+    };
+
     try {
       await saveFavorite(newFavorite);
 
@@ -60,9 +64,9 @@ const InputForm = ({ setFavorites, favorites, setCategories, categories }) => {
       setFavorites((prevFavorites) => [...prevFavorites, newFavorite]);
   
       // Añadir categoría solo si no existe
-      if (!categories.includes(category)) {
-        setCategories((prevCategories) => [...prevCategories, category]);
-        await saveCategory(category);
+      if (!categories.some(cat => cat.categoryName === newCategory.categoryName)) {
+        setCategories((prevCategories) => [...prevCategories, newCategory]);
+        await saveCategory(newCategory);  // Ahora guardas un objeto, no un string
       }
   
       Swal.fire({

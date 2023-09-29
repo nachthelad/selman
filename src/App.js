@@ -76,7 +76,12 @@ function App() {
         />
       );
     } else if (currentPage === "Favoritos") {
-      return <FavoritesPage favorites={favorites} categories={categories} />;
+      return <FavoritesPage
+      favorites={favorites}
+      categories={categories}
+      setFavorites={setFavorites}
+      setCategories={setCategories} 
+    />;
     }
   };
 
