@@ -2,7 +2,7 @@ import React from "react";
 import InputForm from "./InputForm";
 import { Box } from "@mui/material";
 
-const Home = ({ setFavorites, setCategories, categories }) => {
+const Home = ({ setFavorites, setCategories, categories, favorites }) => {
   return (
     <Box sx={{ 
       maxWidth: {
@@ -14,7 +14,7 @@ const Home = ({ setFavorites, setCategories, categories }) => {
       margin: 'auto'
     }}>
       <h3 style={{ marginLeft: '16px' }}>Escribe la URL de tu cuenta de Instagram favorita y luego una categoría</h3>
-      <InputForm setFavorites={setFavorites} setCategories={setCategories} categories={categories} />
+      <InputForm setFavorites={setFavorites} favorites={favorites} setCategories={setCategories} categories={categories} />
     </Box>
   );
 };

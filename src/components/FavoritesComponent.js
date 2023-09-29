@@ -4,7 +4,7 @@ import { List, ListItem, Link, ListItemText, Select, MenuItem, FormControl, Inpu
 const FavoritesComponent = ({ favorites = [], categories = [] }) => {
   const [selectedCategory, setSelectedCategory] = useState(''); // correcto
 
-  const filteredFavorites = !selectedCategory || selectedCategory === ""
+  const filteredFavorites = !selectedCategory || selectedCategory === "Todos"
     ? favorites
     : favorites?.filter(fav => fav.category === selectedCategory);
 
@@ -31,11 +31,11 @@ const FavoritesComponent = ({ favorites = [], categories = [] }) => {
             color: "white",
           },
         }}>
-        <InputLabel sx={{ color: "white" }}>Todos</InputLabel>
+        <InputLabel sx={{ color: "white" }}>Seleccionar</InputLabel>
         <Select
           label={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}>
-          <MenuItem value="" style={{ color: "black" }}>
+          <MenuItem value="Todos" sx={{ color: "black"}}>
             <em>Todos</em>
           </MenuItem>
           {categories?.map((category, index) => (

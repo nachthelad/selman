@@ -3,35 +3,71 @@ import { Container, Grid, TextField, Button } from "@mui/material";
 import Swal from "sweetalert2";
 import { saveFavorite, saveCategory } from "../App";
 
-const InputForm = ({ setFavorites, setCategories, categories }) => {
+const InputForm = ({ setFavorites, favorites, setCategories, categories }) => {
   const [inputValue, setInputValue] = useState("");
   const [category, setCategory] = useState("");
 
   // Validar que la URL sea una URL de Instagram
   const isValidInstagramURL = (url) => {
     const pattern = new RegExp(
-      "^(https://www.)?instagram.com/([a-zA-Z0-9_](?:(?:[a-zA-Z0-9_]|(?:\\.(?=.))){0,28}(?:[a-zA-Z0-9_]))?)/?$"
+      "^(https://www.)?instagram.com/([a-zA-Z0-9_](?:(?:[a-zA-Z0-9_]|(?:\\.(?=.))){0,28}(?:[a-zA-Z0-9_]))?)/?(\\?.*)?$"
     );
     return pattern.test(url);
   };
 
-// Añadir la URL favorita
-const addFavorite = async () => {
-  if (isValidInstagramURL(inputValue)) {
-    const username = inputValue.split("instagram.com/")[1].replace("/", "");
+  const addFavorite = async () => {
+    let username = "";
+    let url = "";
+  
+    // Actualizar el Regex para incluir puntos y guiones bajos
+    const pattern = /^@(?:[a-zA-Z0-9_.]){1,30}$/;
+  
+    if (isValidInstagramURL(inputValue)) {
+      username = inputValue.split("instagram.com/")[1].replace("/", "");
+      url = inputValue;
+    } else if (pattern.test(inputValue) || /^[a-zA-Z0-9._-]{1,30}$/.test(inputValue)) {
+      username = inputValue.replace("@", "");
+      url = `https://www.instagram.com/${username}/`;
+    } else {
+      Swal.fire({
+        title: "Error!",
+        text: "Por favor, ingresa una URL válida de Instagram o un nombre de usuario válido.",
+        icon: "error",
+      });
+      return;
+    }
+  
+    // Asumiendo que favorites se pasa como una prop y es un array de objetos
+    if (favorites && favorites.some(fav => fav.username === username)) {
+      Swal.fire({
+        title: "Error!",
+        text: "Esta URL o usuario ya ha sido agregado.",
+        icon: "error",
+      });
+      return;
+    }
 
     const newFavorite = {
       username,
-      url: inputValue,
+      url,
       category,
     };
 
-    // Guardar en el estado local
-    setFavorites((prevFavorites) => [...prevFavorites, newFavorite]);
-
-    // Guardar en IndexedDB
     try {
+      // Guardar en el estado local
+      setFavorites((prevFavorites) => [...prevFavorites, newFavorite]);
+  
+      // Guardar en IndexedDB
       await saveFavorite(newFavorite);
+  
+      // Añadir categoría solo si no existe
+      if (!categories.includes(category)) {
+        setCategories((prevCategories) => [...prevCategories, category]);
+  
+        // Guardar la nueva categoría en IndexedDB
+        await saveCategory(category);
+      }
+  
       Swal.fire({
         title: "Agregado con éxito!",
         text: "Tu favorito ha sido agregado.",
@@ -43,31 +79,12 @@ const addFavorite = async () => {
         text: "No se pudo guardar tu favorito en la base de datos.",
         icon: "error",
       });
+  
+      // Si hay un error, debemos quitar el favorito y la categoría del estado local para mantener la consistencia
+      setFavorites((prevFavorites) => prevFavorites.filter(fav => fav.username !== username));
+      setCategories((prevCategories) => prevCategories.filter(cat => cat !== category));
     }
-
-    // Añadir categoría solo si no existe
-    if (!categories.includes(category)) {
-      setCategories((prevCategories) => [...prevCategories, category]);
-      
-      // Aquí guardamos la nueva categoría en IndexedDB
-      try {
-        await saveCategory(category);
-      } catch (error) {
-        console.error("Error al guardar la categoría", error);
-      }
-    }
-
-    setInputValue("");
-    setCategory("");
-  } else {
-    Swal.fire({
-      title: "Error!",
-      text: "Por favor, ingresa una URL válida de Instagram.",
-      icon: "error",
-    });
-  }
-};
-
+  };
 
   return (
     <Container style={{ textAlign: "center", paddingTop: "30px" }}>
@@ -76,7 +93,7 @@ const addFavorite = async () => {
           <TextField
             fullWidth
             variant="outlined"
-            label="URL de Instagram"
+            label="URL de Instagram o Usuario"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             sx={{
