@@ -54,17 +54,14 @@ const InputForm = ({ setFavorites, favorites, setCategories, categories }) => {
     };
 
     try {
+      await saveFavorite(newFavorite);
+
       // Guardar en el estado local
       setFavorites((prevFavorites) => [...prevFavorites, newFavorite]);
-  
-      // Guardar en IndexedDB
-      await saveFavorite(newFavorite);
   
       // Añadir categoría solo si no existe
       if (!categories.includes(category)) {
         setCategories((prevCategories) => [...prevCategories, category]);
-  
-        // Guardar la nueva categoría en IndexedDB
         await saveCategory(category);
       }
   
@@ -81,8 +78,8 @@ const InputForm = ({ setFavorites, favorites, setCategories, categories }) => {
       });
   
       // Si hay un error, debemos quitar el favorito y la categoría del estado local para mantener la consistencia
-      setFavorites((prevFavorites) => prevFavorites.filter(fav => fav.username !== username));
-      setCategories((prevCategories) => prevCategories.filter(cat => cat !== category));
+      // setFavorites((prevFavorites) => prevFavorites.filter(fav => fav.username !== username));
+      // setCategories((prevCategories) => prevCategories.filter(cat => cat !== category));
     }
   };
 
