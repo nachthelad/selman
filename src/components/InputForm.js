@@ -21,7 +21,16 @@ const InputForm = ({ setFavorites, favorites, setCategories, categories }) => {
   
     // Actualizar el Regex para incluir puntos y guiones bajos
     const pattern = /^@(?:[a-zA-Z0-9_.]){1,30}$/;
-  
+    
+    if (!category || category.trim() === '') {
+      Swal.fire({
+        title: "Error!",
+        text: "El campo de categoría no puede estar vacío.",
+        icon: "error",
+      });
+      return;
+    }
+
     if (isValidInstagramURL(inputValue)) {
       username = inputValue.split("instagram.com/")[1].replace("/", "");
       url = inputValue;
