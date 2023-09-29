@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Container, Grid, TextField, Button } from "@mui/material";
 import Swal from "sweetalert2";
-import { saveFavorite, saveCategory } from "../App";
+import { saveFavorite, saveCategory } from "../components/dbOperations";
 
 const InputForm = ({ setFavorites, favorites, setCategories, categories }) => {
   const [inputValue, setInputValue] = useState("");
@@ -76,10 +76,7 @@ const InputForm = ({ setFavorites, favorites, setCategories, categories }) => {
         text: "No se pudo guardar tu favorito en la base de datos.",
         icon: "error",
       });
-  
-      // Si hay un error, debemos quitar el favorito y la categoría del estado local para mantener la consistencia
-      // setFavorites((prevFavorites) => prevFavorites.filter(fav => fav.username !== username));
-      // setCategories((prevCategories) => prevCategories.filter(cat => cat !== category));
+
     }
   };
 

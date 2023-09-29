@@ -1,25 +1,82 @@
 import React, { useState } from "react";
-import { List, ListItem, Link, ListItemText, Select, MenuItem, FormControl, InputLabel, Box } from "@mui/material";
+import {
+  List,
+  ListItem,
+  Link,
+  ListItemText,
+  IconButton,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Box,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Swal from "sweetalert2";
+import { deleteFavorite } from "./dbOperations";
 
-const FavoritesComponent = ({ favorites = [], categories = [] }) => {
-  const [selectedCategory, setSelectedCategory] = useState(''); // correcto
+const FavoritesComponent = ({
+  favorites = [],
+  categories = [],
+  setFavorites = () => {},
+  setCategories = () => {},
+}) => {
+  const [selectedCategory, setSelectedCategory] = useState("");
 
-  const filteredFavorites = !selectedCategory || selectedCategory === "Todos"
-    ? favorites
-    : favorites?.filter(fav => fav.category === selectedCategory);
+  const filteredFavorites =
+    !selectedCategory || selectedCategory === "Todos"
+      ? favorites
+      : favorites?.filter((fav) => fav.category === selectedCategory);
+
+  const handleDelete = async (favorite) => {
+    const result = await Swal.fire({
+      title: "¿Estás seguro?",
+      text: "No podrás revertir esta acción",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, borrar",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await deleteFavorite(favorite.username);
+
+      // Calculamos el nuevo estado de los favoritos.
+      const updatedFavorites = favorites.filter((fav) => fav.username !== favorite.username);
+      
+      // Calculamos si debemos eliminar la categoría.
+      const remainingFavoritesInCategory = updatedFavorites.filter((fav) => fav.category === favorite.category);
+      let newCategories = categories;
+      if (remainingFavoritesInCategory.length === 0) {
+        newCategories = categories.filter((cat) => cat !== favorite.category);
+      }
+
+      // Actualizamos los estados.
+      setFavorites([...updatedFavorites]);
+      setCategories([...newCategories]);
+
+      Swal.fire("Eliminado!", "El favorito ha sido eliminado.", "success");
+    } catch (error) {
+      console.log("Error detallado:", error);
+      Swal.fire("Error!", "Hubo un error al eliminar el favorito.", "error");
+    }
+    }
+  };
 
   return (
-    <Box sx={{ 
-      maxWidth: {
-        xs: '400px', 
-        sm: '500px', 
-        md: '600px',
-        lg: '700px',
-      },
-      margin: 'auto',
-    }}>
-      <h2 style={{ marginLeft: '2px' }}>Favoritos</h2>
-      
+    <Box
+      sx={{
+        maxWidth: {
+          xs: "400px",
+          sm: "500px",
+          md: "600px",
+          lg: "700px",
+        },
+        margin: "auto",
+      }}>
+      <h2 style={{ marginLeft: "2px" }}>Favoritos</h2>
+
       <FormControl
         fullWidth
         variant="outlined"
@@ -35,7 +92,7 @@ const FavoritesComponent = ({ favorites = [], categories = [] }) => {
         <Select
           label={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}>
-          <MenuItem value="Todos" sx={{ color: "black"}}>
+          <MenuItem value="Todos" sx={{ color: "black" }}>
             <em>Todos</em>
           </MenuItem>
           {categories?.map((category, index) => (
@@ -46,27 +103,34 @@ const FavoritesComponent = ({ favorites = [], categories = [] }) => {
         </Select>
       </FormControl>
 
-      <List sx={{ maxHeight: '60vh', overflow: 'auto' }}>
+      <List sx={{ maxHeight: "60vh", overflow: "auto" }}>
         {filteredFavorites?.map((favorite, index) => (
           <ListItem key={index}>
             <Link href={favorite.url} target="_blank" rel="noopener noreferrer">
-              <ListItemText 
-                primary={favorite.username} 
+              <ListItemText
+                primary={favorite.username}
                 secondary={favorite.category}
                 primaryTypographyProps={{
-                  style: { 
-                    fontWeight: 'bold', 
-                    fontSize: '1.3rem',
-                    color: 'white'
-                  }
+                  style: {
+                    fontWeight: "bold",
+                    fontSize: "1.3rem",
+                    color: "white",
+                  },
                 }}
                 secondaryTypographyProps={{
-                  style: { 
-                    color: 'wheat'
-                  }
-                }} 
+                  style: {
+                    color: "wheat",
+                  },
+                }}
               />
             </Link>
+            <IconButton
+              edge="end"
+              aria-label="delete"
+              sx={{ color: "white" }}
+              onClick={() => handleDelete(favorite)}>
+              <DeleteIcon />
+            </IconButton>
           </ListItem>
         ))}
       </List>
