@@ -9,7 +9,6 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import Typography from "@mui/material/Typography";
 import { useMediaQuery, useTheme } from "@mui/material";
 
-
 export default function DesktopSidebar({ setCurrentPage }) {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   
@@ -29,8 +28,8 @@ export default function DesktopSidebar({ setCurrentPage }) {
         bgcolor: "transparent",
         display: { xs: "none", md: "block" },
       }}>
-      <Typography variant="h6" align="center" style={{ margin: "10px 0" }}>
-        Gestion.AR
+      <Typography variant="h6" align="center" style={{ margin: "10px 0", fontFamily: "'Kanit', sans-serif" }}>
+        Selfman
       </Typography>
       <List component="nav" aria-label="main mailbox folders">
         <ListItemButton
