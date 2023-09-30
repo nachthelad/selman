@@ -6,14 +6,14 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import HomeIcon from "@mui/icons-material/Home";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Typography from "@mui/material/Typography";
 import { useMediaQuery, useTheme } from "@mui/material";
 import Swal from "sweetalert2";
 
 export default function DesktopSidebar({ setCurrentPage }) {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
-  
+
   const handleListItemClick = (event, index, page, menuName) => {
     setSelectedIndex(index);
     if (menuName !== "Usuario") {
@@ -27,13 +27,11 @@ export default function DesktopSidebar({ setCurrentPage }) {
         icon: "info",
       });
     }
-
   };
-  
-  
+
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
-  
+
   return (
     <Box
       sx={{
@@ -42,8 +40,11 @@ export default function DesktopSidebar({ setCurrentPage }) {
         bgcolor: "transparent",
         display: { xs: "none", md: "block" },
       }}>
-      <Typography variant="h6" align="center" style={{ margin: "10px 0", fontFamily: "'Kanit', sans-serif" }}>
-        Selfman
+      <Typography
+        variant="h6"
+        align="center"
+        style={{ margin: "10px 0", fontFamily: "'Kanit', sans-serif" }}>
+        Selman
       </Typography>
       <List component="nav" aria-label="main mailbox folders">
         <ListItemButton
@@ -56,7 +57,9 @@ export default function DesktopSidebar({ setCurrentPage }) {
         </ListItemButton>
         <ListItemButton
           selected={selectedIndex === 1}
-          onClick={(event) => handleListItemClick(event, 1, "Favoritos", "Favoritos")}>
+          onClick={(event) =>
+            handleListItemClick(event, 1, "Favoritos", "Favoritos")
+          }>
           <ListItemIcon>
             <FavoriteIcon color={isSmallScreen ? "default" : "primary"} />
           </ListItemIcon>
