@@ -18,11 +18,13 @@ const InputForm = ({ setFavorites, favorites, setCategories, categories }) => {
   const addFavorite = async () => {
     let username = "";
     let url = "";
-  
-    // Actualizar el Regex para incluir puntos y guiones bajos
+    
+    const trimmedInput = inputValue.trim();
+    const trimmedCategory = category.trim();
+
     const pattern = /^@(?:[a-zA-Z0-9_.]){1,30}$/;
     
-    if (!category || category.trim() === '') {
+    if (!trimmedCategory) {
       Swal.fire({
         title: "Error!",
         text: "El campo de categoría no puede estar vacío.",
@@ -31,11 +33,11 @@ const InputForm = ({ setFavorites, favorites, setCategories, categories }) => {
       return;
     }
 
-    if (isValidInstagramURL(inputValue)) {
-      username = inputValue.split("instagram.com/")[1].replace("/", "");
-      url = inputValue;
-    } else if (pattern.test(inputValue) || /^[a-zA-Z0-9._-]{1,30}$/.test(inputValue)) {
-      username = inputValue.replace("@", "");
+    if (isValidInstagramURL(trimmedInput)) {
+      username = trimmedInput.split("instagram.com/")[1].replace("/", "");
+      url = trimmedInput;
+    } else if (pattern.test(trimmedInput) || /^[a-zA-Z0-9._-]{1,30}$/.test(trimmedInput)) {
+      username = trimmedInput.replace("@", "");
       url = `https://www.instagram.com/${username}/`;
     } else {
       Swal.fire({
