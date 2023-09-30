@@ -49,13 +49,13 @@ const FavoritesComponent = ({
         const remainingFavoritesInCategory = updatedFavorites.filter((fav) => fav.category === favorite.category);
         let newCategories = categories;
         if (remainingFavoritesInCategory.length === 0) {
-          await deleteCategory(favorite.category); // Aquí eliminamos la categoría de la base de datos
+          await deleteCategory(favorite.category); 
           newCategories = categories.filter((cat) => cat.categoryName !== favorite.category);
         }
     
         // Actualizamos los estados.
-        setFavorites(updatedFavorites); // Asegúrate de que esto realmente actualiza el estado
-        setCategories(newCategories);  // Asegúrate de que esto realmente actualiza el estado
+        setFavorites(updatedFavorites);
+        setCategories(newCategories); 
     
         Swal.fire("Eliminado!", "El favorito ha sido eliminado.", "success");
       } catch (error) {

@@ -4,7 +4,9 @@ import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import HomeIcon from "@mui/icons-material/Home";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useMediaQuery } from "@mui/material";
+import Swal from "sweetalert2";
 
 export default function MyBottomNavigation({ setCurrentPage }) {
   const matches = useMediaQuery("(max-width:900px)");
@@ -50,6 +52,22 @@ export default function MyBottomNavigation({ setCurrentPage }) {
             },
           }}
           icon={<FavoriteIcon />}
+        />
+        <BottomNavigationAction
+          label="Usuario"
+          sx={{
+            "&.Mui-selected": {
+              color: "black",
+            },
+          }}
+          icon={<AccountCircleIcon />}
+          onClick={() => {
+            Swal.fire({
+              title: "En progreso!",
+              text: "Estamos trabajando para traer el inicio de sesión a la app.",
+              icon: "info",
+            });
+          }}
         />
       </BottomNavigation>
     </Box>

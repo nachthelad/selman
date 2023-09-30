@@ -6,16 +6,30 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import HomeIcon from "@mui/icons-material/Home";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Typography from "@mui/material/Typography";
 import { useMediaQuery, useTheme } from "@mui/material";
+import Swal from "sweetalert2";
 
 export default function DesktopSidebar({ setCurrentPage }) {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   
-  const handleListItemClick = (event, index, page) => {
+  const handleListItemClick = (event, index, page, menuName) => {
     setSelectedIndex(index);
-    setCurrentPage(page);
+    if (menuName !== "Usuario") {
+      setCurrentPage(page);
+    }
+
+    if (menuName === "Usuario") {
+      Swal.fire({
+        title: "En progreso!",
+        text: "Estamos trabajando para traer el inicio de sesión a la app.",
+        icon: "info",
+      });
+    }
+
   };
+  
   
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -34,7 +48,7 @@ export default function DesktopSidebar({ setCurrentPage }) {
       <List component="nav" aria-label="main mailbox folders">
         <ListItemButton
           selected={selectedIndex === 0}
-          onClick={(event) => handleListItemClick(event, 0, "Home")}>
+          onClick={(event) => handleListItemClick(event, 0, "Home", "Home")}>
           <ListItemIcon>
             <HomeIcon color={isSmallScreen ? "default" : "primary"} />
           </ListItemIcon>
@@ -42,11 +56,19 @@ export default function DesktopSidebar({ setCurrentPage }) {
         </ListItemButton>
         <ListItemButton
           selected={selectedIndex === 1}
-          onClick={(event) => handleListItemClick(event, 1, "Favoritos")}>
+          onClick={(event) => handleListItemClick(event, 1, "Favoritos", "Favoritos")}>
           <ListItemIcon>
             <FavoriteIcon color={isSmallScreen ? "default" : "primary"} />
           </ListItemIcon>
           <ListItemText primary="Favoritos" />
+        </ListItemButton>
+        <ListItemButton
+          selected={selectedIndex === 1}
+          onClick={(event) => handleListItemClick(event, 2, "", "Usuario")}>
+          <ListItemIcon>
+            <AccountCircleIcon color={isSmallScreen ? "default" : "primary"} />
+          </ListItemIcon>
+          <ListItemText primary="Usuario" />
         </ListItemButton>
       </List>
     </Box>

@@ -33,9 +33,7 @@ export const saveFavorite = async (favorite) => {
       reject("Error en la transacción: " + transaction.error);
     };
 
-    // Manejar eventos específicos para esta solicitud
     request.onsuccess = function(event) {
-      // Código para manejar el éxito de la operación de añadir
       console.log(`Favorito añadido con éxito.`);
     };
 
@@ -149,7 +147,7 @@ export const deleteCategory = async (categoryName) => {
 
     openRequest.onsuccess = function (event) {
       const db = event.target.result;
-      const transaction = db.transaction(["categories"], "readwrite"); // Asumiendo que tienes un 'objectStore' llamado 'categories'
+      const transaction = db.transaction(["categories"], "readwrite"); 
       const store = transaction.objectStore("categories");
       const deleteRequest = store.delete(categoryName);
 

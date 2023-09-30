@@ -6,10 +6,10 @@ const Home = ({ setFavorites, setCategories, categories, favorites }) => {
   return (
     <Box sx={{ 
       maxWidth: {
-        xs: '400px', // para pantallas pequeñas
-        sm: '500px', // para pantallas medianas
-        md: '600px', // para pantallas grandes
-        lg: '700px', // para pantallas aún más grandes
+        xs: '400px', 
+        sm: '500px', 
+        md: '600px', 
+        lg: '700px', 
       },
       margin: 'auto'
     }}>

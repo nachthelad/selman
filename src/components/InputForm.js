@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import { saveFavorite, saveCategory } from "../components/dbOperations";
 
 const InputForm = ({ setFavorites, favorites, setCategories, categories }) => {
-  const [inputValue, setInputValue] = useState("");
+  const [favorite, setfavorite] = useState("");
   const [category, setCategory] = useState("");
 
   // Validar que la URL sea una URL de Instagram
@@ -19,7 +19,7 @@ const InputForm = ({ setFavorites, favorites, setCategories, categories }) => {
     let username = "";
     let url = "";
     
-    const trimmedInput = inputValue.trim();
+    const trimmedInput = favorite.trim();
     const trimmedCategory = category.trim();
 
     const pattern = /^@(?:[a-zA-Z0-9_.]){1,30}$/;
@@ -48,7 +48,6 @@ const InputForm = ({ setFavorites, favorites, setCategories, categories }) => {
       return;
     }
   
-    // Asumiendo que favorites se pasa como una prop y es un array de objetos
     if (favorites && favorites.some(fav => fav.username === username)) {
       Swal.fire({
         title: "Error!",
@@ -103,8 +102,8 @@ const InputForm = ({ setFavorites, favorites, setCategories, categories }) => {
             fullWidth
             variant="outlined"
             label="URL de Instagram o Usuario"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            value={favorite}
+            onChange={(e) => setfavorite(e.target.value)}
             sx={{
               marginBottom: "20px",
               color: "white",
