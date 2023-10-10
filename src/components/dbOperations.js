@@ -1,3 +1,5 @@
+const FAVORITES_STORE = "favorites";
+const CATEGORIES_STORE = "categories";
 export const openDatabase = () => {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open("myDatabase", 2);
@@ -8,8 +10,8 @@ export const openDatabase = () => {
 
     request.onupgradeneeded = function (event) {
       const db = event.target.result;
-      db.createObjectStore("favorites", { keyPath: "username" });
-      db.createObjectStore("categories", { keyPath: "categoryName" });
+      db.createObjectStore(FAVORITES_STORE, { keyPath: "username" });
+      db.createObjectStore(CATEGORIES_STORE, { keyPath: "categoryName" });
     };
 
     request.onsuccess = function (event) {
@@ -20,8 +22,8 @@ export const openDatabase = () => {
 
 export const saveFavorite = async (favorite) => {
   const db = await openDatabase();
-  const transaction = db.transaction(["favorites"], "readwrite");
-  const objectStore = transaction.objectStore("favorites");
+  const transaction = db.transaction([FAVORITES_STORE], "readwrite");
+  const objectStore = transaction.objectStore(FAVORITES_STORE);
   const request = objectStore.add(favorite);
 
   return new Promise((resolve, reject) => {
@@ -38,7 +40,7 @@ export const saveFavorite = async (favorite) => {
     };
 
     request.onerror = function(event) {
-      // Código para manejar errores en la operación de añadir
+      reject(`No se pudo abrir la base de datos: ${event.target.errorCode}`);
       console.log(`Error al añadir el favorito.`);
     };
   });
@@ -47,8 +49,8 @@ export const saveFavorite = async (favorite) => {
 
 export const getAllFavorites = async () => {
   const db = await openDatabase();
-  const transaction = db.transaction(["favorites"], "readonly");
-  const objectStore = transaction.objectStore("favorites");
+  const transaction = db.transaction([FAVORITES_STORE], "readonly");
+  const objectStore = transaction.objectStore(FAVORITES_STORE);
   const request = objectStore.getAll();
 
   return new Promise((resolve, reject) => {
@@ -64,8 +66,8 @@ export const getAllFavorites = async () => {
 
 export const saveCategory = async (category) => {
   const db = await openDatabase();
-  const transaction = db.transaction(["categories"], "readwrite");
-  const objectStore = transaction.objectStore("categories");
+  const transaction = db.transaction([CATEGORIES_STORE], "readwrite");
+  const objectStore = transaction.objectStore(CATEGORIES_STORE);
   const request = objectStore.add(category);
 
   return new Promise((resolve, reject) => {
@@ -92,8 +94,8 @@ export const saveCategory = async (category) => {
 
 export const getAllCategories = async () => {
   const db = await openDatabase();
-  const transaction = db.transaction(["categories"], "readonly");
-  const objectStore = transaction.objectStore("categories");
+  const transaction = db.transaction([CATEGORIES_STORE], "readonly");
+  const objectStore = transaction.objectStore(CATEGORIES_STORE);
   const request = objectStore.getAll();
 
   return new Promise((resolve, reject) => {
@@ -118,9 +120,9 @@ export const deleteFavorite = async (favoriteId) => {
     openRequest.onsuccess = function (event) {
       const db = event.target.result;
 
-      const transaction = db.transaction(["favorites"], "readwrite");
+      const transaction = db.transaction([FAVORITES_STORE], "readwrite");
 
-      const store = transaction.objectStore("favorites");
+      const store = transaction.objectStore(FAVORITES_STORE);
 
       const deleteRequest = store.delete(favoriteId);
 
@@ -147,8 +149,8 @@ export const deleteCategory = async (categoryName) => {
 
     openRequest.onsuccess = function (event) {
       const db = event.target.result;
-      const transaction = db.transaction(["categories"], "readwrite"); 
-      const store = transaction.objectStore("categories");
+      const transaction = db.transaction([CATEGORIES_STORE], "readwrite"); 
+      const store = transaction.objectStore(CATEGORIES_STORE);
       const deleteRequest = store.delete(categoryName);
 
       deleteRequest.onsuccess = function (event) {
